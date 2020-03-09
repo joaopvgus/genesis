@@ -1,3 +1,4 @@
-# genesis
+# this is my personal space on Git to start practicing the Git usage
 
-# second atempt to change through VSCode
+#now I will try to create a new file
+
