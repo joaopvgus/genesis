@@ -1,3 +1,4 @@
+from time import sleep
 import os
 
 class User:
@@ -48,9 +49,9 @@ class Sale:
         return total
     
     def get_sale(self):
-        to_be_printed = 'Seller: ' + self.__seller + '   '
+        to_be_printed = ''
         for group in self.__groups_list:
-            to_be_printed += group.get_quantity() + '   ' + group.get_item().get_name() + '   ' + str(group.get_item().get_price()) + '   ' + str(group.get_total()) + '\n'
+            to_be_printed += self.get_seller() + '   ' + group.get_quantity() + '   ' + group.get_item().get_name() + '   ' + str(group.get_item().get_price()) + '   ' + str(group.get_total()) + '\n'
         return to_be_printed
 
 class Item:
@@ -102,7 +103,10 @@ class Store:
         self.__sellers_list = []
         self.__itens_list = []
         self.__sales_list = []
-        self.__id = 0
+        self.__id = 1
+        
+    def get_current_id(self):
+        return self.__id
         
     def get_itens_list(self):
         return self.__itens_list    
@@ -192,8 +196,16 @@ class main:
 4 - View sales
 5 - Shut down\n\n''')
         if choice == '5':
+            print('Wait a moment...')
+            sleep(3)
+            print('Good Bye')
             return False
+        if choice == '' or choice not in '12345':
+            print('Invalid option')
+            sleep(2)
+            return True
         if choice == '4':
+            print('Seller | Qnt | Name | Price | Total')
             for sale in self.__store.get_sales_list():
                 print(sale.get_sale())
             verify = input('Type any button to go back go menu')
@@ -206,12 +218,15 @@ class main:
             item_name = input('Insert the items name:\n')
             price = float(input('Insert the price of the item:\n'))
             self.__store.add_item(item_name, price)
+            print('Item successfully added\n')
+            print('id: ' + str(self.__store.get_current_id() - 1) + '   Name: ' + item_name + '   Price: ' + str(price))
+            verify = input('Press any key to continue')
             return True
         if choice == '1':
             groups_list = []
             seller_name = input('Insert the seller: ')
             self.set_sale(seller_name, groups_list)
-            return True
+            return True        
 
 main = main()
 main.login()
