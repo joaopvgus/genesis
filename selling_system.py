@@ -109,6 +109,13 @@ class Store:
     
     def get_sales_list(self):
         return self.__sales_list
+    
+    def add_sale(self, new_sale):
+        self.__sales_list.append(new_sale)
+    
+    #only for test purposes, must be deleted further
+    def get_sellers_list(self):
+        return self.__sellers_list
         
     def login(self, name, password):
         for i in self.__users_list:
@@ -117,20 +124,29 @@ class Store:
         return True
     
     def add_seller(self, name):
-        for seller in self.__sellers_list:
-            if name != seller.get_name():
-                new_seller = Seller(name)
-                self.__sellers_list(new_seller)
-                return True
-        return False
+        if len(self.__sellers_list) > 0:
+            for seller in self.__sellers_list:
+                if name != seller.get_name():
+                    new_seller = Seller(name)
+                    self.__sellers_list.append(new_seller)
+                    return True
+        else:
+            new_seller = Seller(name)
+            self.__sellers_list.append(new_seller)
+            return True
     
     def add_item(self, name, price):
-        for item in self.__itens_list:
-            new_item = Item(self._id, name, price)
+        if len(self.__itens_list) > 0:
+            for item in self.__itens_list:
+                new_item = Item(self.__id, name, price)
+                self.__itens_list.append(new_item)
+                self.__id += 1
+                return True
+        else:
+            new_item = Item(self.__id, name, price)
             self.__itens_list.append(new_item)
-            self._id += 1
+            self.__id += 1
             return True
-        return False
     
     def add_sale(self, seller, groups_list):
         new_sale = Sale(seller, groups_list)
@@ -153,17 +169,24 @@ class main:
                 self.login()
                 
     def set_sale(self, seller_name, groups_list):
-        item_name = input('Insert the items name or id: ')
+        item_name = input('Insert the items name or id:\n')
         for item in self.__store.get_itens_list():
             if item_name == item.get_id() or item_name == item.get_name():
                 quantity = input('Insert the quantity: ')
                 new_group = Group(quantity, item)
-                recursion = input('''Do you wish to insert a new item to the sale? \n1 - Yes \n2 - No''')
+                groups_list.append(new_group)
+                recursion = input('Do you wish to insert a new item to the sale? \n1 - Yes \n2 - No\n')
                 if recursion == '1':
                     self.set_sale(seller_name, groups_list)
+        self.__store.add_sale(groups_list)
     
     def menu(self):
+        # the following four lines are only for test purposes and must be deleted further
         os.system('clear')
+        print('sales = ', self.__store.get_sales_list())
+        print('itens = ', self.__store.get_itens_list())
+        print('sellers = ', self.__store.get_sellers_list())
+        # os.system('clear')
         print('Logged in\n')
         choice = input('''Type the number referent to your choice:
 1 - Make a sale
@@ -188,9 +211,9 @@ class main:
             self.__store.add_item(item_name, price)
             return True
         if choice == '1':
-            seller_name = input('Insert the seller: ')
             groups_list = []
-            self.set_sale(seller_name, groups_list)
+            seller_name = input('Insert the seller: ')
+            self.__store.add_sale(self.set_sale(seller_name, groups_list))
             return True
 
 main = main()
