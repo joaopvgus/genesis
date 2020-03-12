@@ -178,7 +178,8 @@ class main:
                 recursion = input('Do you wish to insert a new item to the sale? \n1 - Yes \n2 - No\n')
                 if recursion == '1':
                     self.set_sale(seller_name, groups_list)
-        self.__store.add_sale(groups_list)
+        new_sale = Sale(seller_name, groups_list)
+        self.__store.add_sale(new_sale)
     
     def menu(self):
         # the following four lines are only for test purposes and must be deleted further
@@ -213,7 +214,7 @@ class main:
         if choice == '1':
             groups_list = []
             seller_name = input('Insert the seller: ')
-            self.__store.add_sale(self.set_sale(seller_name, groups_list))
+            self.set_sale(seller_name, groups_list)
             return True
 
 main = main()
