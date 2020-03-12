@@ -110,8 +110,8 @@ class Store:
     def get_sales_list(self):
         return self.__sales_list
     
-    def add_sale(self, new_sale):
-        self.__sales_list.append(new_sale)
+#    def add_sale(self, new_sale):
+#        self.__sales_list.append(new_sale)
     
     #only for test purposes, must be deleted further
     def get_sellers_list(self):
@@ -178,8 +178,7 @@ class main:
                 recursion = input('Do you wish to insert a new item to the sale? \n1 - Yes \n2 - No\n')
                 if recursion == '1':
                     self.set_sale(seller_name, groups_list)
-        new_sale = Sale(seller_name, groups_list)
-        self.__store.add_sale(new_sale)
+        self.__store.add_sale(seller_name, groups_list)
     
     def menu(self):
         # the following four lines are only for test purposes and must be deleted further
