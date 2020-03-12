@@ -27,7 +27,7 @@ class Seller:
 class Sale:
     def __init__(self, seller, groups_list):
         self.__seller = seller
-        self.groups_list = groups_list
+        self.__groups_list = groups_list
         
     def get_seller(self):
         return self.__seller
@@ -48,9 +48,9 @@ class Sale:
         return total
     
     def get_sale(self):
-        to_be_printed = 'Seller: ' + self.__seller + '\n\n'
-        for group in self.groups_list:
-            to_be_printed += group.get_quantity() + '   ' + group.get_item().get_name() + '   ' + group.get_item().get_price() + '   ' + group.get_total() + '\n'
+        to_be_printed = 'Seller: ' + self.__seller + '   '
+        for group in self.__groups_list:
+            to_be_printed += group.get_quantity() + '   ' + group.get_item().get_name() + '   ' + str(group.get_item().get_price()) + '   ' + str(group.get_total()) + '\n'
         return to_be_printed
 
 class Item:
@@ -93,7 +93,7 @@ class Group:
         self.__item = item
         
     def get_total(self):
-        return self.__quantity * self.__item.get_price()
+        return float(self.__quantity) * float(self.__item.get_price())
         
 class Store:
     def __init__(self):
@@ -109,9 +109,6 @@ class Store:
     
     def get_sales_list(self):
         return self.__sales_list
-    
-#    def add_sale(self, new_sale):
-#        self.__sales_list.append(new_sale)
     
     #only for test purposes, must be deleted further
     def get_sellers_list(self):
@@ -194,7 +191,7 @@ class main:
 3 - Add a new seller
 4 - View sales
 5 - Shut down\n\n''')
-        if choice not in '1234':
+        if choice == '5':
             return False
         if choice == '4':
             for sale in self.__store.get_sales_list():
