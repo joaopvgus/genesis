@@ -47,18 +47,6 @@ class Sale:
         for group in self.__groups_list:
             total += (float(group.get_quantity()) * float(group.get_item().get_price()))
         return total
-    
-    # def get_sale(self):
-    #     to_be_printed = ''
-    #     #the following line is for test purposes, and must be removed further
-    #     count2 = 0
-    #     for group in self.__groups_list:
-    #         #the following two line is for test purposes, and must be removed further
-    #         count2+=1
-    #         print('contador 2: {}'.format(count2))
-    #         print('implicit: ' + str(group.get_quantity()) + '  ' + group.get_item().get_name() + '  ' + str(group.get_item().get_price()))
-    #         to_be_printed += self.get_seller() + '   ' + group.get_quantity() + '   ' + group.get_item().get_name() + '   ' + str(group.get_item().get_price()) + '   ' + str(group.get_total()) + '\n'
-    #     return to_be_printed
 
 class Item:
     
@@ -161,12 +149,17 @@ class Store:
         self.__sales_list.append(new_sale)
     
     def print_sales(self):
-        print('Qnt | Name | Price | Total')
+        print('Qnt | Name | Price | Total \n')
         for sale in self.__sales_list:
             print(sale.get_seller())
             for group in sale.get_groups_list():
-                print(group.get_quantity() + '   ' + group.get_item().get_name() + '   ' + str(group.get_item().get_price()) + '   ' + str(group.get_total()))
-            print('                    Total: {}'.format(str(sale.get_total())))
+                print(group.get_quantity() + ' | ' + group.get_item().get_name() + ' | ' + str(group.get_item().get_price()) + ' | ' + str(group.get_total()))
+            print('-------------------Total: {}'.format(str(sale.get_total())))
+            
+    def print_itens(self):
+        print('ID | Name | Price \n')
+        for item in self.__itens_list:
+            print(str(item.get_id()) + ' | ' +  item.get_name() + ' | ' + str(item.get_price()))
 
 class main:
     
@@ -184,7 +177,7 @@ class main:
                 print('Invalid credentials')
                 self.login()
                 
-    def set_sale(self, seller_name, groups_list):
+    def config_sale(self, seller_name, groups_list):
         item_name = input('Insert the items name or id:\n')
         for item in self.__store.get_itens_list():
             if item_name == item.get_id() or item_name == item.get_name():
@@ -193,7 +186,7 @@ class main:
                 groups_list.append(new_group)
                 recursion = input('Do you wish to insert a new item to the sale? \n1 - Yes \n2 - No\n')
                 if recursion == '1':
-                    self.set_sale(seller_name, groups_list)
+                    self.config_sale(seller_name, groups_list)
                 if recursion == '2':
                     self.__store.add_sale(seller_name, groups_list)
     
@@ -210,8 +203,9 @@ class main:
 2 - Add a new item
 3 - Add a new seller
 4 - View sales
-5 - Shut down\n\n''')
-        if choice == '5':
+5 - View itens
+0 - Shut down\n\n''')
+        if choice == '0':
             print('Wait a moment...')
             sleep(3)
             print('Good Bye')
@@ -220,12 +214,19 @@ class main:
             print('Invalid option')
             sleep(2)
             return True
+        if choice == '5':
+            self.__store.print_itens()
+            verify = input('Type any button to go back go menu')
+            return True
         if choice == '4':
             self.__store.print_sales()
             verify = input('Type any button to go back go menu')
             return True
         if choice == '3':
             seller_name = input('Insert a name:\n')
+            if seller_name == '':
+                print('Invalid credentials')
+                verify = input('Type any button to go back to menu')
             self.__store.add_seller(seller_name)
             return True
         if choice == '2':
@@ -239,8 +240,8 @@ class main:
         if choice == '1':
             seller_name = input('Insert the seller: ')
             groups_list = []
-            self.set_sale(seller_name, groups_list)
-            return True        
+            self.config_sale(seller_name, groups_list)
+            return True
 
 main = main()
 main.login()
