@@ -36,8 +36,8 @@ class Sale:
     def set_seller(self, seller):
         self.__seller = seller
         
-    def get_itens_groups(self):
-        return self.groups_list
+    def get_groups_list(self):
+        return self.__groups_list
     
     def set_itens_groups(self, itens_groups):
         self.__itens = itens_groups
@@ -50,7 +50,13 @@ class Sale:
     
     def get_sale(self):
         to_be_printed = ''
+        #the following line is for test purposes, and must be removed further
+        count2 = 0
         for group in self.__groups_list:
+            #the following two line is for test purposes, and must be removed further
+            count2+=1
+            print('contador 2: {}'.format(count2))
+            print('implicit: ' + str(group.get_quantity()) + '  ' + group.get_item().get_name() + '  ' + str(group.get_item().get_price()))
             to_be_printed += self.get_seller() + '   ' + group.get_quantity() + '   ' + group.get_item().get_name() + '   ' + str(group.get_item().get_price()) + '   ' + str(group.get_total()) + '\n'
         return to_be_printed
 
@@ -97,6 +103,10 @@ class Group:
         return float(self.__quantity) * float(self.__item.get_price())
         
 class Store:
+    
+    #the following variable is for test purposes
+    # count = 0
+    
     def __init__(self):
         admin = User('admin', 'admin')
         self.__users_list = [admin]
@@ -104,6 +114,8 @@ class Store:
         self.__itens_list = []
         self.__sales_list = []
         self.__id = 1
+        #the following variable is for test purposes
+        self.count = 0
         
     def get_current_id(self):
         return self.__id
@@ -112,9 +124,12 @@ class Store:
         return self.__itens_list    
     
     def get_sales_list(self):
+        #the following two lines are for test purposes
+        self.count+=1
+        print('count: ',self.count)
         return self.__sales_list
     
-    #only for test purposes, must be deleted further
+    #function only for test purposes, must be deleted further
     def get_sellers_list(self):
         return self.__sellers_list
         
@@ -206,8 +221,12 @@ class main:
             return True
         if choice == '4':
             print('Seller | Qnt | Name | Price | Total')
+            counter3 = 0
             for sale in self.__store.get_sales_list():
-                print(sale.get_sale())
+                counter3+= 1
+                print(counter3)
+                print(sale.get_seller() + '   ' + sale.get_groups_list().get_quantity() + '   ' + sale.get_groups_list().get_item().get_name() + '   ' + sale.get_groups_list().get_item().get_price() + '   ' + str(sale.get_total())) 
+                # print(sale.get_sale())
             verify = input('Type any button to go back go menu')
             return True
         if choice == '3':
