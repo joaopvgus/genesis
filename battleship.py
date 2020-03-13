@@ -7,31 +7,25 @@ class Player:
         self.__counter = 5
         self.__boats = 5
         self.__map = ['0  1  2  3  4  5  6  7  8  9  10 11 12 13 14',
-                         'A  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'B  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'C  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'D  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'E  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'F  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'G  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'H  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'I  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'J  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'K  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'L  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'M  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
-                         'N  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~']
+                      'A  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'B  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'C  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'D  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'E  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'F  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'G  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'H  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'I  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'J  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'K  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'L  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'M  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~',
+                      'N  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~']
     
     def add_boat(self):
         print(self.printed_map('me'))
         print('Player {}: Insert your boats location'.format(self.__id))
         cords = input('Type the alfabetical coordinate followed by the number coordinate: ')
-        # if (cords != '') and (len(cords) == 3) and (cords[1] in '1234567891011121314' and cords[0] in 'ABCDEFGHIJKLMN') and (self.get_map()[dict_y[cords[0]]][dict_x[cords[1]]] == '~'):
-        #     listed = list(self.__map[dict_y[cords[0]]])
-        #     listed[dict_x[cords[1]]] = 'O'
-        #     self.__map[dict_y[cords[0]]] = ''.join(listed)
-        #     self.__counter -= 1
-        # return self.__counter
         if (cords != ''):
             if (len(cords) == 2) and (cords[1] in '123456789' and cords[0] in 'ABCDEFGHIJKLMN') and (self.get_map()[dict_y[cords[0]]][dict_x[cords[1]]] == '~'):
                 listed = list(self.__map[dict_y[cords[0]]])
