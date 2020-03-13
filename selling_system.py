@@ -39,30 +39,30 @@ class Sale:
     def get_groups_list(self):
         return self.__groups_list
     
-    def set_itens_groups(self, itens_groups):
-        self.__itens = itens_groups
+    def add_group(self, group):
+        self.__groups_list.append(group)
         
     def get_total(self):
         total = 0
-        for group in self.groups_list:
-            total += (group.get_quantity() * group.get_item().get_price())
+        for group in self.__groups_list:
+            total += (float(group.get_quantity()) * float(group.get_item().get_price()))
         return total
     
-    def get_sale(self):
-        to_be_printed = ''
-        #the following line is for test purposes, and must be removed further
-        count2 = 0
-        for group in self.__groups_list:
-            #the following two line is for test purposes, and must be removed further
-            count2+=1
-            print('contador 2: {}'.format(count2))
-            print('implicit: ' + str(group.get_quantity()) + '  ' + group.get_item().get_name() + '  ' + str(group.get_item().get_price()))
-            to_be_printed += self.get_seller() + '   ' + group.get_quantity() + '   ' + group.get_item().get_name() + '   ' + str(group.get_item().get_price()) + '   ' + str(group.get_total()) + '\n'
-        return to_be_printed
+    # def get_sale(self):
+    #     to_be_printed = ''
+    #     #the following line is for test purposes, and must be removed further
+    #     count2 = 0
+    #     for group in self.__groups_list:
+    #         #the following two line is for test purposes, and must be removed further
+    #         count2+=1
+    #         print('contador 2: {}'.format(count2))
+    #         print('implicit: ' + str(group.get_quantity()) + '  ' + group.get_item().get_name() + '  ' + str(group.get_item().get_price()))
+    #         to_be_printed += self.get_seller() + '   ' + group.get_quantity() + '   ' + group.get_item().get_name() + '   ' + str(group.get_item().get_price()) + '   ' + str(group.get_total()) + '\n'
+    #     return to_be_printed
 
 class Item:
     
-    def __init__(self,_id, name, price):
+    def __init__(self, _id, name, price):
         self.__id = _id
         self.__name = name
         self.__price = price        
@@ -104,9 +104,6 @@ class Group:
         
 class Store:
     
-    #the following variable is for test purposes
-    # count = 0
-    
     def __init__(self):
         admin = User('admin', 'admin')
         self.__users_list = [admin]
@@ -114,8 +111,6 @@ class Store:
         self.__itens_list = []
         self.__sales_list = []
         self.__id = 1
-        #the following variable is for test purposes
-        self.count = 0
         
     def get_current_id(self):
         return self.__id
@@ -124,9 +119,6 @@ class Store:
         return self.__itens_list    
     
     def get_sales_list(self):
-        #the following two lines are for test purposes
-        self.count+=1
-        print('count: ',self.count)
         return self.__sales_list
     
     #function only for test purposes, must be deleted further
@@ -167,6 +159,14 @@ class Store:
     def add_sale(self, seller, groups_list):
         new_sale = Sale(seller, groups_list)
         self.__sales_list.append(new_sale)
+    
+    def print_sales(self):
+        print('Qnt | Name | Price | Total')
+        for sale in self.__sales_list:
+            print(sale.get_seller())
+            for group in sale.get_groups_list():
+                print(group.get_quantity() + '   ' + group.get_item().get_name() + '   ' + str(group.get_item().get_price()) + '   ' + str(group.get_total()))
+            print('                    Total: {}'.format(str(sale.get_total())))
 
 class main:
     
@@ -194,7 +194,8 @@ class main:
                 recursion = input('Do you wish to insert a new item to the sale? \n1 - Yes \n2 - No\n')
                 if recursion == '1':
                     self.set_sale(seller_name, groups_list)
-        self.__store.add_sale(seller_name, groups_list)
+                if recursion == '2':
+                    self.__store.add_sale(seller_name, groups_list)
     
     def menu(self):
         # the following four lines are only for test purposes and must be deleted further
@@ -220,13 +221,7 @@ class main:
             sleep(2)
             return True
         if choice == '4':
-            print('Seller | Qnt | Name | Price | Total')
-            counter3 = 0
-            for sale in self.__store.get_sales_list():
-                counter3+= 1
-                print(counter3)
-                print(sale.get_seller() + '   ' + sale.get_groups_list().get_quantity() + '   ' + sale.get_groups_list().get_item().get_name() + '   ' + sale.get_groups_list().get_item().get_price() + '   ' + str(sale.get_total())) 
-                # print(sale.get_sale())
+            self.__store.print_sales()
             verify = input('Type any button to go back go menu')
             return True
         if choice == '3':
@@ -242,8 +237,8 @@ class main:
             verify = input('Press any key to continue')
             return True
         if choice == '1':
-            groups_list = []
             seller_name = input('Insert the seller: ')
+            groups_list = []
             self.set_sale(seller_name, groups_list)
             return True        
 
