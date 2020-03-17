@@ -26,17 +26,16 @@ class Player:
         print(self.printed_map('me'))
         print('Player {}: Insert your boats location'.format(self.__id))
         cords = input('Type the alfabetical coordinate followed by the number coordinate: ')
-        if (cords != ''):
+        if (cords != '' and cords[0] in 'ABCDEFGHIJKLMN' and cords[1] in '123456789'):
+            listed = list(self.__map[dict_y[cords[0]]])
             if (len(cords) == 2) and (cords[1] in '123456789' and cords[0] in 'ABCDEFGHIJKLMN') and (self.get_map()[dict_y[cords[0]]][dict_x[cords[1]]] == '~'):
-                listed = list(self.__map[dict_y[cords[0]]])
                 listed[dict_x[cords[1]]] = 'O'
-                self.__map[dict_y[cords[0]]] = ''.join(listed)
-                self.__counter -= 1
             elif (len(cords) == 3) and (cords[1:3] == '11'  or cords[1:3] == '12'  or cords[1:3] == '13'  or cords[1:3] == '14') and cords[0] in 'ABCDEFGHIJKLMN' and (self.get_map()[dict_y[cords[0]]][dict_x[cords[1]]] == '~'):
-                listed = list(self.__map[dict_y[cords[0]]])
-                listed[dict_x[cords[1:3]]] = 'O'
-                self.__map[dict_y[cords[0]]] = ''.join(listed)
-                self.__counter -= 1
+                listed[dict_x[cords[1:3]]] = 'O'    
+            self.__map[dict_y[cords[0]]] = ''.join(listed)
+            self.__counter -= 1
+        else:
+            print('invalid coordinates')
         return self.__counter
     
     def get_boats(self):
@@ -70,31 +69,38 @@ class Player:
             return printed
 
     def attack(self, enemy):
-        print('Your boats: {}\n Your enemys boats: {}'.format(self.get_boats(), enemy.get_boats()) + '\n')
+        print('Your boats: {}\nYour enemys boats: {}'.format(self.get_boats(), enemy.get_boats()) + '\n')
         print('Your map:\n')
         print(self.printed_map('me'))
         print('Your enemys map:\n')
         print(enemy.printed_map('enemy'))
         cords = input('Type the alfabetical coordinate followed by the number coordinate: ')
-        if cords != '' and len(cords) < 2 and cords[1] not in '1234567891011121314' or cords[0] not in 'ABCDEFGHIJKLMN':
-            x_cor = cords[1]
-            y_cor = cords[0]
-            print('Invalid coordinate')
-            self.attack(enemy)
+        
+        if (cords != '' and len(cords) < 4 and len(cords) > 1 and cords[0] in 'ABCDEFGHIJKLMN'):
+            if (len(cords) == 2 or len(cords) == 3) and ((cords[1] in '123456789' or (cords[1:3] == '11'  or cords[1:3] == '12'  or cords[1:3] == '13'  or cords[1:3] == '14')) and cords[0] in 'ABCDEFGHIJKLMN') and (enemy.get_map()[dict_y[cords[0]]][dict_x[cords[1]]] == 'O'):
+                if len(cords) == 2:
+                    x_cor = cords[1]
+                else:
+                    x_cor = cords[1:3]
+                
+                y_cor = cords[0]
+                listed = list(enemy.get_map()[dict_y[y_cor]])
+                if listed[dict_x[x_cor]] == 'O':
+                    listed[dict_x[x_cor]] = 'X'
+                    enemy.decrement_boats()
+                    print('You\'ve got one!')
+                elif listed[dict_x[x_cor]] == '~' or listed[dict_x[x_cor]] == '#':
+                    listed[dict_x[x_cor]] = '#'
+                    print('You\'ve lost that one...')
+                
+                new_line = ''.join(listed)
+                enemy.set_map_line(dict_y[y_cor], new_line)
         else:
-            listed = list(enemy.get_map()[dict_y[y_cor]])
-            if listed[dict_x[x_cor]] == 'O':
-                listed[dict_x[x_cor]] = 'X'
-                new_line = ''.join(listed)
-                enemy.set_map_line(dict_y[y_cor], new_line)
-                enemy.decrement_boats()
-                print('You\'ve got one! Make another move!')
-                self.attack(enemy)
-            else:
-                listed[dict_x[x_cor]] = '#'
-                new_line = ''.join(listed)
-                enemy.set_map_line(dict_y[y_cor], new_line)
-                print('You\'ve lost that one...')
+            print('invalid coordinates')
+            self.attack(enemy)
+                
+    def get_counter(self):
+        return self.__counter
 
 class main():
     def __init__(self):
@@ -110,6 +116,7 @@ class main():
     def rounds(self):
         check = True
         while check:
+            print('hacked:\n', self.__player1.get_map())
             self.__player1.attack(self.__player2)
             if self.__player2.get_boats() == 0:
                 print('Player 1 won!')
@@ -119,6 +126,13 @@ class main():
                 if self.__player1.get_boats() == 0:
                     print('Player 2 won!')
                     break
+                
+    def get_player1(self):
+        return self.__player1
+    
+    
+    def get_player2(self):
+        return self.__player2
                 
 main = main()
 main.set_boats()
