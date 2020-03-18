@@ -1,9 +1,5 @@
-from random import randint
+a = [[0,1],[2,3]]
 
-a = [0,1,2,3,4,5,6]
+text = ''.join(str(num) for num in a)
 
-b = randint(0,len(a))
-
-c = a[b]
-
-print(c)
+print(text)
