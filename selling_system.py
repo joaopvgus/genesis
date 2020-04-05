@@ -33,6 +33,13 @@ class Sale:
         self.__seller = seller
         self.__groups_list = groups_list
         
+    def __repr__(self):
+        return (f'{self.__seller}, {self.__groups_list}')
+        
+    def print_sale(self):
+        list = '|'.join(group.print_group() for group in self.__groups_list)
+        return (f'{self.__seller}/{list}')
+        
     def get_seller(self):
         return self.__seller
     
@@ -56,10 +63,13 @@ class Item:
     def __init__(self, _id, name, price):
         self.__id = _id
         self.__name = name
-        self.__price = price       
+        self.__price = price      
         
     def __repr__(self):
-        return f'({self.__id}, {self.__name})'
+        return (f'{self.__id}, {self.__name}, {self.__price}') 
+        
+    def print_item(self):
+        return (f'{self.__id},{self.__name},{self.__price}')
 
     def get_id(self):
         return self.__id
@@ -80,6 +90,12 @@ class Group:
     def __init__(self, quantity, item):
         self.__quantity = quantity
         self.__item = item
+        
+    def __repr__(self):
+        return (f'{self.__quantity},{self.__item}')
+        
+    def print_group(self):
+        return (f'{self.__quantity}-{self.__item.print_item()}')
         
     def get_quantity(self):
         return self.__quantity
@@ -165,7 +181,40 @@ class Store:
         print('ID | Name | Price \n')
         for item in self.__itens_list:
             print(str(item.get_id()) + ' | ' +  item.get_name() + ' | ' + str(item.get_price()))
-
+            
+    def sellers_auto(self, data):
+        sellers = data.readlines()[0].split(' ')
+        for name in sellers:
+            seller = Seller(name)
+            self.__sellers_list.append(seller)
+        
+    def itens_auto(self, data):
+        itens_list = data.readlines()[0].split(' ')
+        for item_info in itens_list:
+            item_arrayed = item_info.split(',')
+            item = Item(item_arrayed[0], item_arrayed[1], item_arrayed[2])
+            self.__itens_list.append(item)
+            
+    def sales_auto(self, data):
+        sales_list = data.readlines()[0].split(' ')
+        for sale_info in sales_list:
+            sale_arrayed = sale_info.split('/')
+            seller = sale_arrayed[0]
+            groups_list = sale_arrayed[1].split('|')
+            
+            new_groups_list = []
+            
+            for group_info in groups_list:
+                group_arrayed = group_info.split('-')
+                item_arrayed = group_arrayed[1].split(',')
+                quantity = group_arrayed[0]
+                item = Item(item_arrayed[0], item_arrayed[1], item_arrayed[2])
+                group = Group(quantity, item)
+                new_groups_list.append(group)
+            
+            new_sale = Sale(seller, new_groups_list)
+            self.__sales_list.append(new_sale)
+    
 class main:
     
     def __init__(self):
@@ -176,6 +225,7 @@ class main:
             user = input('Insert the user:\n')
             password = input('Insert the password:\n')
             if self.__store.login(user, password) == False:
+                self.load_system()
                 loop = True
                 while loop:
                     loop = main.menu()
@@ -187,19 +237,20 @@ class main:
                 
     def config_sale(self, seller_name, groups_list):
         item_name = input('Insert the items name or id:\n')
+        itens_list = ' '.join(str(item.get_id()) + ' ' + item.get_name() for item in self.__store.get_itens_list())
         for item in self.__store.get_itens_list():
             if item_name == item.get_id() or item_name == item.get_name():
                 quantity = input('Insert the quantity: ')
                 new_group = Group(quantity, item)
                 groups_list.append(new_group)
-                recursion = input('Do you wish to insert a new item to the sale? \n1 - Yes \n2 - No\n')
-                if recursion == '1':
+                recursion = input('Do you wish to insert a new item to the sale? y/n \n')
+                if recursion == 'y':
                     self.config_sale(seller_name, groups_list)
-                if recursion == '2':
+                if recursion == 'n':
                     self.__store.add_sale(seller_name, groups_list)
-            else:
-                print('Invalid ID or name')
-                sleep(1)
+        if item_name not in itens_list:
+            print('Invalid ID or name')
+            sleep(1)
     
     # menu(1)          
     def set_sale(self):
@@ -209,7 +260,8 @@ class main:
         if seller_name in sellers_names:
             self.config_sale(seller_name, groups_list)
         else:
-            verify = input('Invalid seller')
+            print('Invalid seller')
+            sleep(1)
     # menu(2)
     def add_a_new_item(self):
         item_name = input('Insert the items name:\n')
@@ -224,7 +276,7 @@ class main:
             else: print('There\'s already an item with this name')
         except:
             print('Invalid values')
-        sleep(2)
+        sleep(1)
     
     # menu(3)
     def add_a_new_seller(self):
@@ -245,6 +297,28 @@ class main:
             else:
                 print('Invalid option')
         sleep(1)
+        
+    def save_system(self):
+        sellers_file = open('sellers.txt', 'w')
+        itens_file = open('itens.txt', 'w')
+        sales_file = open('sales.txt', 'w')
+        sellers = ' '.join(seller.get_name() for seller in self.__store.get_sellers_list())
+        itens = ' '.join(item.print_item() for item in self.__store.get_itens_list())
+        sales = ' '.join(sale.print_sale() for sale in self.__store.get_sales_list())
+        sellers_file.write(sellers)
+        itens_file.write(itens)
+        sales_file.write(sales)
+        sellers_file.close()
+        itens_file.close()
+        sales_file.close()
+        
+    def load_system(self):
+        sellers_file = open('sellers.txt', 'r')
+        itens_file = open('itens.txt', 'r')
+        sales_file = open('sales.txt', 'r')
+        self.__store.sellers_auto(sellers_file)
+        self.__store.itens_auto(itens_file)
+        self.__store.sales_auto(sales_file)
     
     def menu(self):
         # the following four lines are only for test purposes and must be deleted further
@@ -263,7 +337,9 @@ class main:
 0 - Shut down\n\n''')
         if choice == '0':
             print('Wait a moment...')
-            sleep(3)
+            self.save_system()
+            print('Saving current status...')
+            sleep(1)
             print('Good Bye')
             return False
         if choice == '' or choice not in '12345':

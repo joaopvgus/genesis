@@ -1,5 +1,4 @@
-a = [[0,1],[2,3]]
+file = open('system.txt', 'r')
 
-text = ''.join(str(num) for num in a)
-
-print(text)
+itens = file.readlines()[1].split(' ')
+print(itens)
