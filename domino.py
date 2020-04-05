@@ -48,7 +48,7 @@ class Game:
         self.__player2 = Player()
         self.__player = [self.__player1, self.__player2]
         self.__table = []
-        self.__pieces = [[0,0]]
+        self.__pieces = []
         
     def get_player1(self):
         return self.__player1
@@ -103,11 +103,11 @@ class Game:
         self.verify_pieces(player)
         piece = input('Choose your piece, Player {}:\n'.format(str(player.get_id())))
         side = input('What side will you play it?\n1 - Left \n2 - Right\n')
-        if piece != '' and piece in '123456789' and int(piece) <= len(player.get_hand()) and side in '12':
-            self.verify_side(player,piece, side)
+        if piece != '' and piece in '123456789' and int(piece) <= len(player.get_hand()) and side != '' and side in '12':
+            self.verify_side(player, piece, side)
             player.remove_piece(int(piece) - 1)
         else:
-            print('invalid option, try again\n')
+            verif = input('invalid option, type any button to try again\n')
             self.round(player)
             
     def verify_side(self, player, piece, side):
@@ -131,24 +131,25 @@ class Game:
             else:
                 print('invalid option, try again\n')
                 self.round(player)
-                
+ 
     def verify_pieces(self, player):
         verifier = 0
         for my_piece in player.get_hand():
-            if my_piece[0] != self.__pieces[0][0] and my_piece[1] != self.__pieces[0][0] and my_piece[0] != self.__pieces[-1][0] and my_piece[1] != self.__pieces[-1][0]:
+            if my_piece[0] != self.__table[0][0] and my_piece[1] != self.__table[0][0] and my_piece[0] != self.__table[-1][1] and my_piece[1] != self.__table[-1][1]:
+                # a = input('139! this one won\'t do, lets see the next one')
                 pass
-            elif my_piece[0] == self.__pieces[0][0] or my_piece[1] == self.__pieces[0][0] or my_piece[0] == self.__pieces[-1][0] or my_piece[1] == self.__pieces[-1][0]:
+            else:
+                # b = input('141! this one will do, lets see the next one')
                 verifier = 1
         
         if verifier == 0:
+            # c = input('145! u shall now receive your piece')
             if len(self.__pieces) > 0:
                 ver = input('One more piece to you \nType any button to continue...')
                 num = randint(0, len(self.__pieces) - 1)
                 player.add_piece(self.__pieces[num])
                 self.__pieces.pop(num)
                 self.verify_pieces(player)
-            else:
-                self.draw()
 
     def draw(self):
         soma1 = 0
@@ -157,19 +158,27 @@ class Game:
             soma1 += piece[0] + piece[1]
         for piece in self.__player2.get_hand():
             soma2 += piece[0] + piece[1]
+        if soma1 == soma2 :
+            print('It\'s a draw')
         if soma1 > soma2:
-            return self.__player1
+            print('Player 1 won')
         else:
-            return self.__player2
+            print('Player 2 won')
+        return True
         
+    def check_for_winner(self):
+        if 
+        # if len(self.__pieces) == 0:
+        #     if self.draw() : return False
+            
     def loop(self):        
         running = True
         self.round1()
         self.round(self.__player2)
-        while running:
-            print(self.__player1.get_hand())
+        while check_for_winner():
+            print('player 2: ', self.__player2.get_hand())
             self.round(self.__player1)
-            print(self.__player2.get_hand())
+            print('player 1: ', self.__player1.get_hand())
             self.round(self.__player2)
         
 game = Game()

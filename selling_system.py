@@ -22,6 +22,9 @@ class Seller:
     def __init__(self, name):
         self.__name = name
         
+    def __repr__(self):
+        return self.__name
+        
     def get_name(self):
         return self.__name
         
@@ -53,7 +56,10 @@ class Item:
     def __init__(self, _id, name, price):
         self.__id = _id
         self.__name = name
-        self.__price = price        
+        self.__price = price       
+        
+    def __repr__(self):
+        return f'({self.__id}, {self.__name})'
 
     def get_id(self):
         return self.__id
@@ -109,7 +115,6 @@ class Store:
     def get_sales_list(self):
         return self.__sales_list
     
-    #function only for test purposes, must be deleted further
     def get_sellers_list(self):
         return self.__sellers_list
         
@@ -167,15 +172,18 @@ class main:
         self.__store = Store()
     
     def login(self):
-        login_finish = True
-        while login_finish:
+        while True:
             user = input('Insert the user:\n')
             password = input('Insert the password:\n')
-            login_finish = self.__store.login(user, password)
-            if(login_finish == True):
+            if self.__store.login(user, password) == False:
+                loop = True
+                while loop:
+                    loop = main.menu()
+                break
+            else:
                 os.system('clear')
                 print('Invalid credentials')
-                self.login()
+                sleep(1)
                 
     def config_sale(self, seller_name, groups_list):
         item_name = input('Insert the items name or id:\n')
@@ -189,6 +197,54 @@ class main:
                     self.config_sale(seller_name, groups_list)
                 if recursion == '2':
                     self.__store.add_sale(seller_name, groups_list)
+            else:
+                print('Invalid ID or name')
+                sleep(1)
+    
+    # menu(1)          
+    def set_sale(self):
+        seller_name = input('Insert the seller: ')
+        groups_list = []
+        sellers_names = ' '.join(seller.get_name() for seller in self.__store.get_sellers_list()) 
+        if seller_name in sellers_names:
+            self.config_sale(seller_name, groups_list)
+        else:
+            verify = input('Invalid seller')
+    # menu(2)
+    def add_a_new_item(self):
+        item_name = input('Insert the items name:\n')
+        try:
+            price = float(input('Insert the price of the item:\n'))
+            itens_list = ' '.join(item.get_name() for item in self.__store.get_itens_list())
+            if item_name not in itens_list:
+                os.system('clear')
+                self.__store.add_item(item_name, price)
+                print('Item successfully added\n')
+                print('id: ' + str(self.__store.get_current_id() - 1) + '   Name: ' + item_name + '   Price: ' + str(price))
+            else: print('There\'s already an item with this name')
+        except:
+            print('Invalid values')
+        sleep(2)
+    
+    # menu(3)
+    def add_a_new_seller(self):
+        sellers_names = ' '.join(seller.get_name() for seller in self.__store.get_sellers_list())
+        seller_name = input('Insert a name:\n')
+        if seller_name == '':
+            print('Invalid credentials')
+        elif seller_name in sellers_names:
+            print(f'{seller_name} is already registered')
+        else:
+            verify = input(f'Are you shure you wanna set {seller_name} as a seller? (y/n) \n')
+            if verify == 'y':
+                print(f'{seller_name} was set as a seller')
+                self.__store.add_seller(seller_name)
+            elif verify == 'n':
+                print('Operation cancelled')
+                pass
+            else:
+                print('Invalid option')
+        sleep(1)
     
     def menu(self):
         # the following four lines are only for test purposes and must be deleted further
@@ -212,7 +268,7 @@ class main:
             return False
         if choice == '' or choice not in '12345':
             print('Invalid option')
-            sleep(2)
+            sleep(1)
             return True
         if choice == '5':
             self.__store.print_itens()
@@ -223,28 +279,14 @@ class main:
             verify = input('Type any button to go back go menu')
             return True
         if choice == '3':
-            seller_name = input('Insert a name:\n')
-            if seller_name == '':
-                print('Invalid credentials')
-                verify = input('Type any button to go back to menu')
-            self.__store.add_seller(seller_name)
-            return True
+            self.add_a_new_seller()
+            return True 
         if choice == '2':
-            item_name = input('Insert the items name:\n')
-            price = float(input('Insert the price of the item:\n'))
-            self.__store.add_item(item_name, price)
-            print('Item successfully added\n')
-            print('id: ' + str(self.__store.get_current_id() - 1) + '   Name: ' + item_name + '   Price: ' + str(price))
-            verify = input('Press any key to continue')
+            self.add_a_new_item()
             return True
         if choice == '1':
-            seller_name = input('Insert the seller: ')
-            groups_list = []
-            self.config_sale(seller_name, groups_list)
+            self.set_sale()
             return True
 
 main = main()
 main.login()
-loop = True
-while loop:
-    loop = main.menu()
