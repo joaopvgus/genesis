@@ -234,13 +234,35 @@ class main:
                 os.system('clear')
                 print('Invalid credentials')
                 sleep(1)
+         
+    def print_groups_list(self, seller_name, groups_list):
+        total = 0
+        print(f'Seller: {seller_name}')
+        print('Qnt | Name | Price | Total \n')
+        for group in groups_list:
+            total += group.get_total()
+            print(str(group.get_quantity()) + ' | ' + group.get_item().get_name() + ' | ' + str(group.get_item().get_price()) + ' | ' + str(group.get_total()))
+        print('-------------------Total: {}'.format(str(total)))
                 
     def config_sale(self, seller_name, groups_list):
+        os.system('clear')
+        print('Set a new sale\n')
+        
+        if groups_list != []:
+            self.print_groups_list(seller_name, groups_list)
+            print('\n')
+        
+        print('Add a new item')
         item_name = input('Insert the items name or id:\n')
-        itens_list = ' '.join(str(item.get_id()) + ' ' + item.get_name() for item in self.__store.get_itens_list())
+        itens_list = ' '.join(item.print_item() for item in self.__store.get_itens_list())
         for item in self.__store.get_itens_list():
-            if item_name == item.get_id() or item_name == item.get_name():
-                quantity = input('Insert the quantity: ')
+            if item_name == str(item.get_id()) or item_name == item.get_name():
+                try:
+                    quantity = float(input('Insert the quantity: '))
+                except:
+                    print('Invalid value')
+                    sleep(1)
+                    self.config_sale(seller_name, groups_list)
                 new_group = Group(quantity, item)
                 groups_list.append(new_group)
                 recursion = input('Do you wish to insert a new item to the sale? y/n \n')
@@ -248,12 +270,19 @@ class main:
                     self.config_sale(seller_name, groups_list)
                 if recursion == 'n':
                     self.__store.add_sale(seller_name, groups_list)
+                else:
+                    print('Invalid option, ending the procedure...')
+                    sleep(1)
+
         if item_name not in itens_list:
             print('Invalid ID or name')
             sleep(1)
+            self.config_sale(seller_name, groups_list)
     
     # menu(1)          
     def set_sale(self):
+        os.system('clear')
+        print('Set a new sale\n')
         seller_name = input('Insert the seller: ')
         groups_list = []
         sellers_names = ' '.join(seller.get_name() for seller in self.__store.get_sellers_list()) 
@@ -262,8 +291,11 @@ class main:
         else:
             print('Invalid seller')
             sleep(1)
+
     # menu(2)
     def add_a_new_item(self):
+        os.system('clear')
+        print('Add a new item\n')
         item_name = input('Insert the items name:\n')
         try:
             price = float(input('Insert the price of the item:\n'))
@@ -280,6 +312,8 @@ class main:
     
     # menu(3)
     def add_a_new_seller(self):
+        os.system('clear')
+        print('Add a new seller\n')
         sellers_names = ' '.join(seller.get_name() for seller in self.__store.get_sellers_list())
         seller_name = input('Insert a name:\n')
         if seller_name == '':
@@ -341,6 +375,7 @@ class main:
         if choice == '0':
             print('Wait a moment...')
             self.save_system()
+            sleep(1)
             print('Saving current status...')
             sleep(1)
             print('Good Bye')
