@@ -313,12 +313,15 @@ class main:
         sales_file.close()
         
     def load_system(self):
-        sellers_file = open('sellers.txt', 'r')
-        itens_file = open('itens.txt', 'r')
-        sales_file = open('sales.txt', 'r')
-        self.__store.sellers_auto(sellers_file)
-        self.__store.itens_auto(itens_file)
-        self.__store.sales_auto(sales_file)
+        try:
+            sellers_file = open('sellers.txt', 'r')
+            itens_file = open('itens.txt', 'r')
+            sales_file = open('sales.txt', 'r')
+            self.__store.sellers_auto(sellers_file) 
+            self.__store.itens_auto(itens_file)
+            self.__store.sales_auto(sales_file)
+        except:
+            pass
     
     def menu(self):
         # the following four lines are only for test purposes and must be deleted further
