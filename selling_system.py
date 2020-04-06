@@ -174,7 +174,7 @@ class Store:
         for sale in self.__sales_list:
             print(sale.get_seller())
             for group in sale.get_groups_list():
-                print(group.get_quantity() + ' | ' + group.get_item().get_name() + ' | ' + str(group.get_item().get_price()) + ' | ' + str(group.get_total()))
+                print(str(group.get_quantity()) + ' | ' + group.get_item().get_name() + ' | ' + str(group.get_item().get_price()) + ' | ' + str(group.get_total()))
             print('-------------------Total: {}'.format(str(sale.get_total())))
             
     def print_itens(self):
@@ -194,6 +194,7 @@ class Store:
             item_arrayed = item_info.split(',')
             item = Item(item_arrayed[0], item_arrayed[1], item_arrayed[2])
             self.__itens_list.append(item)
+            self.__id += 1
             
     def sales_auto(self, data):
         sales_list = data.readlines()[0].split(' ')
@@ -253,7 +254,11 @@ class main:
             print('\n')
         
         print('Add a new item')
-        item_name = input('Insert the items name or id:\n')
+        item_name = input('Insert the items name or id: (or enter to see all the items)\n')
+        if item_name == '':
+            self.__store.print_itens()
+            item_name = input('Insert the items name or id: (or enter to quit)\n')
+            if item_name == '': pass
         itens_list = ' '.join(item.print_item() for item in self.__store.get_itens_list())
         for item in self.__store.get_itens_list():
             if item_name == str(item.get_id()) or item_name == item.get_name():
@@ -268,10 +273,9 @@ class main:
                 recursion = input('Do you wish to insert a new item to the sale? y/n \n')
                 if recursion == 'y':
                     self.config_sale(seller_name, groups_list)
-                if recursion == 'n':
-                    self.__store.add_sale(seller_name, groups_list)
                 else:
-                    print('Invalid option, ending the procedure...')
+                    print('Finishing sale...')
+                    self.__store.add_sale(seller_name, groups_list)
                     sleep(1)
 
         if item_name not in itens_list:
@@ -373,9 +377,11 @@ class main:
 5 - View itens
 0 - Shut down\n\n''')
         if choice == '0':
+            os.system('clear')
             print('Wait a moment...')
             self.save_system()
             sleep(1)
+            os.system('clear')
             print('Saving current status...')
             sleep(1)
             print('Good Bye')
@@ -385,10 +391,14 @@ class main:
             sleep(1)
             return True
         if choice == '5':
+            os.system('clear')
+            print('Itens\n')
             self.__store.print_itens()
             verify = input('Type any button to go back go menu')
             return True
         if choice == '4':
+            os.system('clear')
+            print('Sales\n')
             self.__store.print_sales()
             verify = input('Type any button to go back go menu')
             return True
