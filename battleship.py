@@ -1,3 +1,5 @@
+import os
+
 dict_x = {'1': 3, '2': 6, '3': 9, '4': 12, '5': 15, '6': 18, '7': 21, '8': 24, '9': 27, '10': 30, '11': 33, '12': 36, '13': 39, '14': 42}
 dict_y = {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7, 'H': 8, 'I': 9, 'J': 10, 'K': 11, 'L': 12, 'M': 13, 'N': 14}
 
@@ -69,6 +71,8 @@ class Player:
             return printed
 
     def attack(self, enemy):
+        os.system('clear')
+        verif = input(f'Player {self.__id} turn \nType any key to continue')
         print('Your boats: {}\nYour enemys boats: {}'.format(self.get_boats(), enemy.get_boats()) + '\n')
         print('Your map:\n')
         print(self.printed_map('me'))
@@ -116,7 +120,7 @@ class main():
     def rounds(self):
         check = True
         while check:
-            print('hacked:\n', self.__player1.get_map())
+            # print('hacked:\n', self.__player1.get_map())
             self.__player1.attack(self.__player2)
             if self.__player2.get_boats() == 0:
                 print('Player 1 won!')
