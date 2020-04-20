@@ -30,7 +30,7 @@ class Player:
             listed = list(self.__map[dict_y[cords[0]]])
             if (len(cords) == 2) and (cords[1] in '123456789' and cords[0] in 'ABCDEFGHIJKLMN') and (self.get_map()[dict_y[cords[0]]][dict_x[cords[1]]] == '~'):
                 listed[dict_x[cords[1]]] = 'O'
-            elif (len(cords) == 3) and (cords[1:3] == '11'  or cords[1:3] == '12'  or cords[1:3] == '13'  or cords[1:3] == '14') and cords[0] in 'ABCDEFGHIJKLMN' and (self.get_map()[dict_y[cords[0]]][dict_x[cords[1]]] == '~'):
+            elif (len(cords) == 3) and (cords[1:3] == '10' or cords[1:3] == '11'  or cords[1:3] == '12'  or cords[1:3] == '13'  or cords[1:3] == '14') and cords[0] in 'ABCDEFGHIJKLMN' and (self.get_map()[dict_y[cords[0]]][dict_x[cords[1]]] == '~'):
                 listed[dict_x[cords[1:3]]] = 'O'    
             self.__map[dict_y[cords[0]]] = ''.join(listed)
             self.__counter -= 1
@@ -77,7 +77,7 @@ class Player:
         cords = input('Type the alfabetical coordinate followed by the number coordinate: ')
         
         if (cords != '' and len(cords) < 4 and len(cords) > 1 and cords[0] in 'ABCDEFGHIJKLMN'):
-            if (len(cords) == 2 or len(cords) == 3) and ((cords[1] in '123456789' or (cords[1:3] == '11'  or cords[1:3] == '12'  or cords[1:3] == '13'  or cords[1:3] == '14')) and cords[0] in 'ABCDEFGHIJKLMN') and (enemy.get_map()[dict_y[cords[0]]][dict_x[cords[1]]] == 'O'):
+            if (len(cords) == 2 or len(cords) == 3) and ((cords[1] in '123456789' or ( cords[1:3] == '10' or cords[1:3] == '11'  or cords[1:3] == '12'  or cords[1:3] == '13'  or cords[1:3] == '14')) and cords[0] in 'ABCDEFGHIJKLMN'):
                 if len(cords) == 2:
                     x_cor = cords[1]
                 else:
