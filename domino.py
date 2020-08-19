@@ -91,7 +91,6 @@ class Game:
         play = input('Choose your piece, Player 1:\n')
         try:
             if int(play) <= len(self.__player1.get_hand()) and int(play)-1 >= 0:
-            # if play != '' and play in '123456789' and int(play) <= len(self.__player1.get_hand()):
                 self.__table.append(self.__player1.get_hand()[int(play) - 1])
                 self.__player1.remove_piece(int(play) - 1)
             else:
@@ -102,7 +101,7 @@ class Game:
             self.round1()
     
     def round(self, player):
-        # os.system('clear')
+        os.system('clear')
         ver = input('player {}, type any button to continue...'.format(player.get_id()))
         print('table: ', end='')
         print(*self.__table)
@@ -112,7 +111,6 @@ class Game:
             side = input('What side will you play it?\n1 - Left \n2 - Right\n')
             try:
                 if (int(piece) <= len(player.get_hand()) and int(piece) > 0) and side != '' and side in '12':
-                # if piece != '' and piece in '123456789' and int(piece) <= len(player.get_hand()) and side != '' and side in '12':
                     if self.verify_side(player, piece, side) :
                         player.remove_piece(int(piece) - 1)
                 else:
@@ -128,14 +126,11 @@ class Game:
         verifier = 0
         for my_piece in player.get_hand():
             if my_piece[0] != self.__table[0][0] and my_piece[1] != self.__table[0][0] and my_piece[0] != self.__table[-1][1] and my_piece[1] != self.__table[-1][1]:
-                # a = input('139! this one won\'t do, lets see the next one')
                 pass
             else:
-                # b = input('141! this one will do, lets see the next one')
                 verifier = 1
                 
         if verifier == 0:
-            # c = input('145! u shall now receive your piece')
             if len(self.__pieces) > 0:
                 ver = input('One more piece to you, player {} \nType any button to continue...'.format(str(player.get_id())))
                 num = randint(0, len(self.__pieces) - 1)
@@ -175,18 +170,14 @@ class Game:
         verifier = 0
         for piece in self.__player1.get_hand():
             if piece[0] != self.__table[0][0] and piece[1] != self.__table[0][0] and piece[0] != self.__table[-1][1] and piece[1] != self.__table[-1][1]:
-                # a = input('174! this one won\'t do, lets see the next one')
                 pass
             else:
-                # b = input('177! this one will do, lets see the next one')
                 verifier = 1
         
         for piece in self.__player2.get_hand():
             if piece[0] != self.__table[0][0] and piece[1] != self.__table[0][0] and piece[0] != self.__table[-1][1] and piece[1] != self.__table[-1][1]:
-                # a = input('174! this one won\'t do, lets see the next one')
                 pass
             else:
-                # b = input('177! this one will do, lets see the next one')
                 verifier = 1
                 
         if verifier == 1 : return True
