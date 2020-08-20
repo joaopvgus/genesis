@@ -28,17 +28,24 @@ class Player:
         print(self.printed_map('me'))
         print('Player {}: Insert your boats location'.format(self.__id))
         cords = input('Type the alfabetical coordinate followed by the number coordinate: ')
-        if (cords != '' and cords[0] in 'ABCDEFGHIJKLMN' and cords[1] in '123456789'):
+        try:
             listed = list(self.__map[dict_y[cords[0]]])
             if (len(cords) == 2) and (cords[1] in '123456789' and cords[0] in 'ABCDEFGHIJKLMN') and (self.get_map()[dict_y[cords[0]]][dict_x[cords[1]]] == '~'):
                 listed[dict_x[cords[1]]] = 'O'
+                self.__counter -= 1
             elif (len(cords) == 3) and (cords[1:3] == '10' or cords[1:3] == '11'  or cords[1:3] == '12'  or cords[1:3] == '13'  or cords[1:3] == '14') and cords[0] in 'ABCDEFGHIJKLMN' and (self.get_map()[dict_y[cords[0]]][dict_x[cords[1]]] == '~'):
-                listed[dict_x[cords[1:3]]] = 'O'    
+                listed[dict_x[cords[1:3]]] = 'O'
+                self.__counter -= 1
+            else:
+                ver = input('invalid coordinates (Type any key)')
+                
             self.__map[dict_y[cords[0]]] = ''.join(listed)
-            self.__counter -= 1
-        else:
-            print('invalid coordinates')
-        return self.__counter
+
+            return self.__counter
+        
+        except:
+            ver = input('invalid coordinates (Type any key)')
+            return self.__counter
     
     def get_boats(self):
         return self.__boats
@@ -92,15 +99,19 @@ class Player:
                 if listed[dict_x[x_cor]] == 'O':
                     listed[dict_x[x_cor]] = 'X'
                     enemy.decrement_boats()
-                    print('You\'ve got one!')
-                elif listed[dict_x[x_cor]] == '~' or listed[dict_x[x_cor]] == '#':
+                    ver = input('You\'ve got one! (Type any key)')
+                elif listed[dict_x[x_cor]] == '~':
+                # elif listed[dict_x[x_cor]] == '~' or listed[dict_x[x_cor]] == '#':
                     listed[dict_x[x_cor]] = '#'
-                    print('You\'ve lost that one...')
+                    ver = input('You\'ve lost that one... (Type any key)')
+                elif listed[dict_x[x_cor]] == '#':
+                    ver = input('You\'ve already shot here! (Type any key)')
+                    self.attack(enemy)
                 
                 new_line = ''.join(listed)
                 enemy.set_map_line(dict_y[y_cor], new_line)
         else:
-            print('invalid coordinates')
+            ver = input('invalid coordinates (Type any key)')
             self.attack(enemy)
                 
     def get_counter(self):
@@ -110,6 +121,7 @@ class main():
     def __init__(self):
         self.__player1 = Player('1')
         self.__player2 = Player('2')
+        self.set_boats()
     
     def set_boats(self):
         counter1 = 0
@@ -120,7 +132,6 @@ class main():
     def rounds(self):
         check = True
         while check:
-            # print('hacked:\n', self.__player1.get_map())
             self.__player1.attack(self.__player2)
             if self.__player2.get_boats() == 0:
                 print('Player 1 won!')
@@ -139,5 +150,4 @@ class main():
         return self.__player2
                 
 main = main()
-main.set_boats()
 main.rounds()
